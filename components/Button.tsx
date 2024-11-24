@@ -1,24 +1,11 @@
-import { forwardRef } from 'react';
-import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
-type ButtonProps = {
-  title: string;
-} & TouchableOpacityProps;
-
-export const Button = forwardRef<TouchableOpacity, ButtonProps>(
-  ({ title, ...touchableProps }, ref) => {
-    return (
-      <TouchableOpacity
-        ref={ref}
-        {...touchableProps}
-        className={`${styles.button} ${touchableProps.className}`}>
-        <Text className={styles.buttonText}>{title}</Text>
-      </TouchableOpacity>
-    );
-  }
-);
-
-const styles = {
-  button: 'items-center bg-indigo-500 rounded-[28px] shadow-md p-4',
-  buttonText: 'text-white text-lg font-semibold text-center',
-};
+export default function Button({ children, ...props }) {
+  return (
+    <TouchableOpacity {...props}>
+      <View className="rounded-3xl bg-blue-600">
+        <Text className="px-2 py-4 text-center text-3xl font-medium text-white">{children}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
