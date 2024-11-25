@@ -1,4 +1,4 @@
-import { View, Text, Pressable, SafeAreaView } from 'react-native';
+import { View, Text, Pressable, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import React, { useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Link, useRouter } from 'expo-router';
@@ -15,22 +15,51 @@ export default function SignUp() {
 
   async function signUpWithEmail() {
     setLoading(true);
+
+    // Validation
     if (!email || !password || !name) {
       Alert.alert('Error', 'Please fill in all fields.');
       setLoading(false);
       return;
     }
+
+    // Signup user
     const {
-      data: { session },
+      data: { user, session },
       error,
     } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email,
+      password,
+      options: {
+        data: {
+          name,
+        },
+      },
     });
-    console.log('session', session);
-    console.log('error', error);
-    if (error) Alert.alert(error.message);
-    if (!session) Alert.alert('Please check your inbox for email verification!');
+
+    // console.log('session', session);
+    // console.log('error', error);
+    // Handle errors during signup
+    if (error) {
+      Alert.alert('Error', error.message);
+      setLoading(false);
+      return;
+    }
+
+    // Handle email verification required case
+    if (!user) {
+      Alert.alert('Success', 'Account created. Please check your email for verification!');
+      setLoading(false);
+      return;
+    }
+
+    // Handle errors during profile insertion
+    if (profileError) {
+      Alert.alert('Error saving profile', profileError.message);
+    } else {
+      Alert.alert('Success', 'Account created successfully. Please verify your email!');
+    }
+
     setLoading(false);
   }
 
@@ -75,7 +104,9 @@ export default function SignUp() {
         </View>
 
         <View className="my-8 flex justify-center">
-          <Button onPress={() => signUpWithEmail()}>Signup</Button>
+          <Button onPress={() => signUpWithEmail()}>
+            {loading ? <ActivityIndicator size={40} color={'white'} /> : 'Signup'}
+          </Button>
         </View>
         <View>
           <Link href={'/login'}>

@@ -1,13 +1,33 @@
 import '../global.css';
+import { Redirect, Stack, useRouter } from 'expo-router';
+import { useAuth, AuthProvider } from '../components/auth/AuthContext';
+import { supabase } from '~/lib/supabase';
+import { useEffect } from 'react';
 
-import { Stack } from 'expo-router';
-
-export default function Layout() {
+const MainLayout = () => {
   return (
-    <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(login)/login" />
-      <Stack.Screen name="(signup)/signUp" />
-    </Stack>
+    <AuthProvider>
+      <Layout />
+    </AuthProvider>
   );
+};
+
+function Layout() {
+  const { setAuth } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    supabase.auth.onAuthStateChange((_event, session) => {
+      // console.log('session is', session?.user);
+
+      if (session) {
+        //valid user
+        router.push('/home/home');
+      } else {
+        router.push('/');
+      }
+    });
+  });
+
+  return <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }} />;
 }
+export default MainLayout;

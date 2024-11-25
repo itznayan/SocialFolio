@@ -1,9 +1,11 @@
-import { View, Text, Pressable, SafeAreaView } from 'react-native';
+import { View, Text, Pressable, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
 import React, { useState } from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Link, useRouter } from 'expo-router';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import { supabase } from '~/lib/supabase';
+
 export default function login() {
   const router = useRouter();
 
@@ -17,6 +19,7 @@ export default function login() {
       email: email,
       password: password,
     });
+    // console.log(error);
 
     if (error) Alert.alert(error.message);
     setLoading(false);
@@ -56,7 +59,10 @@ export default function login() {
           <Text className="text-xl font-medium text-black/80">Forgot Password?</Text>
         </View>
         <View className="my-8 flex justify-center">
-          <Button disabled={loading}>Login</Button>
+          <Button onPress={signInWithEmail}>
+            {' '}
+            {loading ? <ActivityIndicator size={40} color={'white'} /> : 'Login'}
+          </Button>
         </View>
         <View>
           <Link href={'/signUp'}>
