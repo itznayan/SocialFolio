@@ -3,7 +3,7 @@ import LoginPic from '../assets/img/login.png';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Button from '../components/Button';
 import { Link, useRouter } from 'expo-router';
-export default function index() {
+export default function Index() {
   const router = useRouter();
   return (
     <SafeAreaView

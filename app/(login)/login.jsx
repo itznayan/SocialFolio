@@ -5,6 +5,7 @@ import { Link, useRouter } from 'expo-router';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { supabase } from '~/lib/supabase';
+import { useToast } from 'react-native-toast-notifications';
 
 export default function login() {
   const router = useRouter();
@@ -12,7 +13,7 @@ export default function login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const toast = useToast();
   async function signInWithEmail() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
@@ -20,7 +21,9 @@ export default function login() {
       password: password,
     });
     // console.log(error);
-
+    if (!error) {
+      toast.show('Sign In....', { duration: 600, animationType: 'slide-in' });
+    }
     if (error) Alert.alert(error.message);
     setLoading(false);
   }

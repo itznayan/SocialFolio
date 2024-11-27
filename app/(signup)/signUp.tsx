@@ -5,6 +5,7 @@ import { Link, useRouter } from 'expo-router';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { supabase } from '~/lib/supabase';
+import { useToast } from 'react-native-toast-notifications';
 export default function SignUp() {
   const router = useRouter();
 
@@ -12,7 +13,7 @@ export default function SignUp() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-
+  const toast = useToast();
   async function signUpWithEmail() {
     setLoading(true);
 
@@ -61,6 +62,8 @@ export default function SignUp() {
     }
 
     setLoading(false);
+
+    toast.show('Signing Up....', { duration: 600, animationType: 'slide-in' });
   }
 
   return (
