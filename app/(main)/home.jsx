@@ -9,7 +9,7 @@ export default function Home() {
   const { setAuth, user } = useAuth();
   const toast = useToast();
 
-  // console.log(user);
+  // console.log('user', user);
 
   const handleSignOut = async () => {
     const success = await signOutService(setAuth, Alert);

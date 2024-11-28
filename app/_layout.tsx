@@ -48,7 +48,7 @@ function Layout() {
       if (session) {
         //valid user
         setAuth(session?.user);
-        updateUserData(session?.user);
+        updateUserData(session?.user, session.user?.email);
         router.push('/(main)/home');
       } else {
         setAuth(null);
@@ -57,13 +57,12 @@ function Layout() {
     });
   }, []);
 
-  const updateUserData = async (user) => {
+  const updateUserData = async (user, email) => {
     //for getting user Data of Profile
 
     let res = await getUserData(user?.id);
-    // console.log('got userData : ', res);
-    if (res.success) setUserData(res.data);
-    handleUserDetails(res);
+    // console.log('got userData : ', res.msg);
+    if (res.success) setUserData({ ...res.msg, email });
   };
   return <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }} />;
 }
